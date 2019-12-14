@@ -6,6 +6,7 @@ inherit git-r3 eutils
 DESCRIPTION="rind"
 HOMEPAGE=""
 EGIT_REPO_URI="${CODEDIR}""/rind https://github.com/alexander-n8hgeg5e/rind.git"
+EGIT_COMMIT="af2df40219fa0b97deec328c3039608970ffc588"
 
 LICENSE=""
 SLOT="0"
