@@ -1,0 +1,52 @@
+#!/usr/bin/python3
+
+from sys import argv
+from os import mkdir,listdir
+from os.path import expandvars,basename
+from os.path import sep as psep
+from re import sub
+from subprocess import Popen,DEVNULL,STDOUT,check_output
+
+rundir=expandvars('/tmp/rindd_run_${USER}')
+ok_states=['R','S','D']
+not_ok_states=['Z','X','t','T','I']
+
+args={
+        'one_instance' : True  ,
+        'runcmd' : argv[1:]         ,
+     }
+
+if argv[1]=='+':
+    args['one_instance'] = False
+    args['runcmd'] = argv[2:]
+
+
+
+runit=True
+if args['one_instance']:
+    for i in listdir(rundir):
+        bn=basename(i)
+        progname_fromdir = sub('^(.*)_[1-9][0-9]*$','\\1',bn[4:])
+        if progname_fromdir == args['runcmd'][0]:
+            # seems already running
+            with open(rundir+psep+i) as f:
+                pid=f.readline()
+            cmd=['ps','--no-headers','-p', pid ,'-o','s']
+            state = check_output(cmd).decode().strip()
+            if state in ok_states:
+                runit = False
+            else:
+                cmd=['kill' , pid ]
+                if not call(cmd):
+                    cmd=['kill','-s9' , pid ]
+                    call(cmd)
+                    # success or not, runit = True
+
+if runit:
+    p = Popen(args['runcmd'], shell=False,stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL, close_fds=True,start_new_session=True)
+    try:
+        mkdir(rundir)
+    except FileExistsError:
+        pass 
+    with open( rundir + '/run_' + args['runcmd'][0] + '_' + str(p.pid) , mode='wt' ) as pidfile:
+        pidfile.write(str(p.pid))

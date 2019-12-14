@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo cp rind /bin/
+sudo cp rindd /bin/
+sudo cp rindoff /bin/
+sudo rsync -rvi usr /
+

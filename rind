@@ -1,0 +1,4 @@
+#!/usr/bin/python3
+from sys import argv
+from subprocess import Popen,DEVNULL
+p = Popen(argv[1:], shell=False,stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL, close_fds=True,start_new_session=True)

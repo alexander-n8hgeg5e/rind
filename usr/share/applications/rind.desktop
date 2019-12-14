@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=rind
+GenericName=run
+Comment=run executable file independent (new session)
+MimeType=text/x-python
+Exec=rind %F
+Type=Application
+Terminal=false
+

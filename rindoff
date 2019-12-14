@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+"""
+
+"""
+from os.path import expandvars,basename
+from os.path import sep as psep
+from sys import argv
+from subprocess import call
+from os import unlink,listdir
+from re import sub
+
+rundir=expandvars('/tmp/rindd_run_${USER}')
+
+for i in listdir(rundir):
+  bn=basename(i)
+  progname=sub('^(.*)_[1-9][0-9]*$','\\1',bn[4:])
+  if progname==argv[1]:
+    with open(rundir+psep+i) as f:
+      pid=f.readline()
+    cmd=['kill', pid ]
+    print('stopping "'+progname+'"   pid: '+str(pid))
+    if call(cmd) == 0:
+      unlink( rundir+psep+i )
+
+# vim: set tabstop=2 shiftwidth=2 foldnestmax=1 foldlevel=1 :
