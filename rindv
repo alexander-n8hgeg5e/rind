@@ -1,0 +1,5 @@
+#!/usr/bin/python3
+from sys import argv
+from subprocess import Popen,DEVNULL
+p = Popen(argv[1:], shell=False, stdin=DEVNULL, close_fds=False,start_new_session=True)
+print(p.pid)

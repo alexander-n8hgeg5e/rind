@@ -26,4 +26,5 @@ src_install(){
 dobin rind
 dobin rindd
 dobin rindoff
+dobin rindv
 }
