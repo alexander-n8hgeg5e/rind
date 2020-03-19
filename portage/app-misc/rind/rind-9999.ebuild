@@ -9,7 +9,7 @@ EGIT_REPO_URI="${CODEDIR}""/rind https://github.com/alexander-n8hgeg5e/rind.git"
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE=""
 
 DEPEND=""
