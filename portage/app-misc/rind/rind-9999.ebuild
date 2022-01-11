@@ -27,4 +27,5 @@ dobin rind
 dobin rindd
 dobin rindoff
 dobin rindv
+dobin ril
 }

@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+from sys import argv
+from subprocess import Popen,DEVNULL,PIPE
+
+p = Popen(argv[1:], shell=False,stdin=DEVNULL, stdout=PIPE, stderr=PIPE, close_fds=True,start_new_session=True)
+
+from re import sub,A
+from string import printable
+printable=sub("\s","",printable)
+
+def prepare_appname(thing):
+    thing=sub('[,]\s+[\']',",'",thing.strip())
+    thing=sub('[\']\s+[,]',"',",thing.strip())
+    thing=sub('\s+',' ',thing.strip())
+    thing="','".join(thing.split(" "))
+    return "".join(i for i in filter(lambda x: x in printable,thing))
+    
+
+stdtag=f"command \"{argv}\":"
+errtag=f"ERROR: command \"{argv}\":"
+stdtag=prepare_appname(str(argv))
+errtag=prepare_appname(str(argv))
+print(errtag)
+print(stdtag)
+stdlogger = Popen   (
+                    ['logger','-p', 'syslog.warning', '-t', stdtag],
+                    shell=False,
+                    stdin=p.stdout,
+                    stdout=DEVNULL,
+                    stderr=DEVNULL,
+                    close_fds=True,
+                    start_new_session=True
+                    )
+errlogger = Popen   (
+                    ['logger','-p', 'syslog.error', '-t', errtag],
+                    shell=False,
+                    stdin=p.stderr,
+                    stdout=DEVNULL,
+                    stderr=DEVNULL,
+                    close_fds=True,
+                    start_new_session=True
+                    )
+print(p.pid)
