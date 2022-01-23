@@ -15,13 +15,21 @@ def prepare_appname(thing):
     thing="','".join(thing.split(" "))
     return "".join(i for i in filter(lambda x: x in printable,thing))
     
+# make it shorter for readability
+# full ril path is not needed
+argv=argv[1:]
 
-stdtag=f"command \"{argv}\":"
-errtag=f"ERROR: command \"{argv}\":"
-stdtag=prepare_appname(str(argv))
-errtag=prepare_appname(str(argv))
-print(errtag)
-print(stdtag)
+# need to prepare the string
+# to meet the requirements of 
+# the used syslog field 
+# the field is called 
+# something like tag  or app-name
+stdtag = prepare_appname(str(argv))
+errtag = prepare_appname(str(argv))
+stdtag = f"ril({stdtag}):"
+errtag = f"ERROR:{stdtag}"
+#print(errtag)
+#print(stdtag)
 stdlogger = Popen   (
                     ['logger','-p', 'syslog.warning', '-t', stdtag],
                     shell=False,
