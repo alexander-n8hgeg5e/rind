@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit git-r3 eutils
+PYTHON_COMPAT=( python3_{6,7,8,9,10} )
+inherit git-r3 eutils python-r1
 DESCRIPTION="rind"
 HOMEPAGE=""
 EGIT_REPO_URI="${CODEDIR}""/rind https://github.com/alexander-n8hgeg5e/rind.git"
