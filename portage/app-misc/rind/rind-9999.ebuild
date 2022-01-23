@@ -28,4 +28,5 @@ dobin rindd
 dobin rindoff
 dobin rindv
 dobin ril
+python_foreach_impl python_doscript rils
 }

@@ -1,0 +1,48 @@
+#!/usr/bin/python3
+from sys import argv
+from subprocess import Popen,DEVNULL,PIPE
+
+cmdline = " ".join(argv[1:])
+p = Popen(cmdline, shell=True, stdin=DEVNULL, stdout=PIPE, stderr=PIPE, close_fds=True,start_new_session=True)
+
+from re import sub,A
+from string import printable
+printable=sub("\s","",printable)
+
+def prepare_appname(thing):
+    thing=sub('[,]\s+[\']',",'",thing.strip())
+    thing=sub('[\']\s+[,]',"',",thing.strip())
+    thing=sub('\s+',' ',thing.strip())
+    thing="','".join(thing.split(" "))
+    return "".join(i for i in filter(lambda x: x in printable,thing))
+    
+# need to prepare the string
+# to meet the requirements of 
+# the used syslog field 
+# the field is called 
+# something like tag  or app-name
+stdtag = prepare_appname(cmdline)
+errtag = prepare_appname(cmdline)
+stdtag = f"ril({stdtag}):"
+errtag = f"ERROR: {stdtag}"
+#print(errtag)
+#print(stdtag)
+stdlogger = Popen   (
+                    ['logger','-p', 'syslog.warning', '-t', stdtag],
+                    shell=False,
+                    stdin=p.stdout,
+                    stdout=DEVNULL,
+                    stderr=DEVNULL,
+                    close_fds=True,
+                    start_new_session=True
+                    )
+errlogger = Popen   (
+                    ['logger','-p', 'syslog.error', '-t', errtag],
+                    shell=False,
+                    stdin=p.stderr,
+                    stdout=DEVNULL,
+                    stderr=DEVNULL,
+                    close_fds=True,
+                    start_new_session=True
+                    )
+print(p.pid)
