@@ -27,7 +27,7 @@ argv=argv[1:]
 stdtag = prepare_appname(str(argv))
 errtag = prepare_appname(str(argv))
 stdtag = f"ril({stdtag}):"
-errtag = f"ERROR:{stdtag}"
+errtag = f"ERROR: {stdtag}"
 #print(errtag)
 #print(stdtag)
 stdlogger = Popen   (
